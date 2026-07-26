@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 
 const capabilities = [
   {
@@ -64,22 +65,22 @@ export default function Home() {
       <main>
         <header className="siteHeader">
           <div className="headerInner">
-            <a className="brand" href="/">
+            <Link className="brand" href="/">
               <span className="brandMark">SV</span>
 
               <span>
                 <strong>SecureVolt</strong>
                 <small>Solutions Incorporated</small>
               </span>
-            </a>
+            </Link>
 
             <nav>
               <a href="#solutions">Solutions</a>
               <a href="#process">Process</a>
               <a href="#about">About</a>
-              <a className="navButton" href="/contact">
+              <Link className="navButton" href="/contact">
                 Request a Quote
-              </a>
+              </Link>
             </nav>
           </div>
         </header>
@@ -106,9 +107,9 @@ export default function Home() {
               </p>
 
               <div className="heroActions">
-                <a className="primaryButton" href="/contact">
+                <Link className="primaryButton" href="/contact">
                   Request a Volume Quote
-                </a>
+                </Link>
 
                 <a
                   className="secondaryButton"
@@ -245,7 +246,7 @@ export default function Home() {
                 <p>Ship-to location and required delivery timeline.</p>
               </div>
 
-              <a href="/contact">Start a quote request →</a>
+              <Link href="/contact">Start a quote request →</Link>
             </aside>
           </div>
         </section>
@@ -305,9 +306,9 @@ export default function Home() {
           </div>
 
           <div className="finalCtaActions">
-            <a className="primaryButton lightButton" href="/contact">
+            <Link className="primaryButton lightButton" href="/contact">
               Request a Commercial Quote
-            </a>
+            </Link>
 
             <a
               className="textLink"

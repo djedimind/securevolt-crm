@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 
 export default function SIPTrunking() {
   return (
@@ -17,7 +18,7 @@ export default function SIPTrunking() {
           <li>🔹 High-Quality VoIP Connectivity</li>
           <li>🔹 Scalable Call Center Solutions</li>
         </ul>
-        <a href="/contact" className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg">Get a Free Quote</a>
+        <Link href="/contact" className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg">Get a Free Quote</Link>
       </div>
     </>
   );

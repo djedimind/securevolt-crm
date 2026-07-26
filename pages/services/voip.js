@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 
 export default function VoIP() {
   return (
@@ -15,7 +16,7 @@ export default function VoIP() {
           <li>🔹 AI-Driven Call Routing & IVR</li>
           <li>🔹 Remote Work & Mobile Support</li>
         </ul>
-        <a href="/contact" className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg">Get a Free Quote</a>
+        <Link href="/contact" className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg">Get a Free Quote</Link>
       </div>
     </>
   );
