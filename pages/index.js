@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
 
 const capabilities = [
@@ -65,12 +66,19 @@ export default function Home() {
       <main>
         <header className="siteHeader">
           <div className="headerInner">
-            <Link className="brand" href="/">
-              <span className="brandMark">SV</span>
-
-              <span>
-                <strong>SecureVolt</strong>
-                <small>Solutions Incorporated</small>
+            <Link
+              className="brand"
+              href="/"
+              aria-label="SecureVolt Solutions home"
+            >
+              <span className="brandLogo">
+                <Image
+                  src="/securevolt-logo.png"
+                  alt="SecureVolt Solutions Incorporated"
+                  fill
+                  priority
+                  sizes="190px"
+                />
               </span>
             </Link>
 
@@ -388,18 +396,17 @@ export default function Home() {
           gap: 12px;
         }
 
-        .brandMark {
-          width: 42px;
-          height: 42px;
-          border-radius: 10px;
-          display: grid;
-          place-items: center;
-          background: linear-gradient(135deg, #16a3ff, #2563eb);
-          color: white;
-          font-size: 14px;
-          font-weight: 900;
-          letter-spacing: 0.04em;
-          box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+        .brandLogo {
+          position: relative;
+          display: block;
+          width: 190px;
+          height: 52px;
+          flex-shrink: 0;
+        }
+
+        .brandLogo :global(img) {
+          object-fit: contain;
+          object-position: left center;
         }
 
         .brand strong,
