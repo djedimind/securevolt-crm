@@ -399,17 +399,14 @@ export default function Home() {
         .brandLogo {
           position: relative;
           display: block;
-          width: 180px;
-          height: 58px;
-          overflow: hidden;
+          width: 190px;
+          height: 52px;
           flex-shrink: 0;
         }
 
         .brandLogo :global(img) {
           object-fit: contain;
           object-position: left center;
-          transform: scale(2.2);
-          transform-origin: left center;
         }
 
         .brand strong,
@@ -583,6 +580,7 @@ export default function Home() {
           content: "✓";
           margin-right: 7px;
           color: #39ff14;
+          font-weight: 900;
         }
 
         .heroPanel {
@@ -780,7 +778,7 @@ export default function Home() {
         .procurementSection li::before {
           content: "✓";
           margin-right: 9px;
-          color: #49b5ff;
+          color: #39ff14;
           font-weight: 900;
         }
 
