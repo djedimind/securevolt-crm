@@ -374,7 +374,7 @@ export default function Home() {
           top: 0;
           z-index: 50;
           border-bottom: 1px solid rgba(148, 163, 184, 0.22);
-          background: rgba(8, 20, 36, 0.94);
+          background: rgba(5, 8, 7, 0.96);
           backdrop-filter: blur(14px);
         }
 
@@ -399,14 +399,17 @@ export default function Home() {
         .brandLogo {
           position: relative;
           display: block;
-          width: 190px;
-          height: 52px;
+          width: 180px;
+          height: 58px;
+          overflow: hidden;
           flex-shrink: 0;
         }
 
         .brandLogo :global(img) {
           object-fit: contain;
           object-position: left center;
+          transform: scale(2.2);
+          transform-origin: left center;
         }
 
         .brand strong,
@@ -444,11 +447,13 @@ export default function Home() {
           color: white;
         }
 
-        .navButton {
-          padding: 11px 17px;
+        nav .navButton {
+          padding: 11px 18px;
           border-radius: 8px;
-          background: #168cff;
-          color: white;
+          background: #39ff14;
+          color: #071008 !important;
+          font-weight: 850;
+          box-shadow: 0 8px 24px rgba(57, 255, 20, 0.2);
         }
 
         .hero {
@@ -456,10 +461,10 @@ export default function Home() {
           background:
             radial-gradient(
               circle at top right,
-              rgba(30, 107, 255, 0.27),
+              rgba(57, 255, 20, 0.14),
               transparent 32%
             ),
-            linear-gradient(135deg, #071321, #0b1e35 58%, #071522);
+            linear-gradient(135deg, #050807, #101713 58%, #071008);
           color: white;
         }
 
@@ -475,7 +480,7 @@ export default function Home() {
           height: 320px;
           top: -150px;
           right: 12%;
-          background: rgba(14, 165, 233, 0.14);
+          background: rgba(57, 255, 20, 0.12);
         }
 
         .heroGlowTwo {
@@ -483,7 +488,7 @@ export default function Home() {
           height: 240px;
           bottom: -120px;
           left: 3%;
-          background: rgba(37, 99, 235, 0.12);
+          background: rgba(32, 217, 104, 0.10);
         }
 
         .heroInner {
@@ -500,7 +505,7 @@ export default function Home() {
 
         .eyebrow,
         .sectionLabel {
-          color: #59b7ff;
+          color: #39ff14;
           font-size: 12px;
           font-weight: 800;
           letter-spacing: 0.13em;
@@ -517,7 +522,7 @@ export default function Home() {
 
         h1 span {
           display: block;
-          color: #48aaff;
+          color: #39ff14;
         }
 
         .heroText {
@@ -549,9 +554,9 @@ export default function Home() {
         }
 
         .primaryButton {
-          background: linear-gradient(135deg, #1596ff, #2563eb);
+          background: linear-gradient(135deg, #39ff14, #20d968);
           color: white;
-          box-shadow: 0 14px 38px rgba(37, 99, 235, 0.27);
+          box-shadow: 0 14px 38px rgba(57, 255, 20, 0.20);
         }
 
         .primaryButton:hover {
@@ -577,7 +582,7 @@ export default function Home() {
         .heroDetails span::before {
           content: "✓";
           margin-right: 7px;
-          color: #4bb4ff;
+          color: #39ff14;
         }
 
         .heroPanel {
@@ -590,7 +595,7 @@ export default function Home() {
         }
 
         .panelLabel {
-          color: #5fbdff;
+          color: #39ff14;
           font-size: 11px;
           font-weight: 850;
           letter-spacing: 0.12em;
@@ -676,7 +681,7 @@ export default function Home() {
         }
 
         .sectionHeading > span {
-          color: #147bd1;
+          color: #0d8f4f;
           font-size: 12px;
           font-weight: 850;
           letter-spacing: 0.13em;
@@ -718,7 +723,7 @@ export default function Home() {
         }
 
         .cardNumber {
-          color: #1489e8;
+          color: #20d968;
           font-size: 12px;
           font-weight: 900;
           letter-spacing: 0.1em;
@@ -738,7 +743,7 @@ export default function Home() {
 
         .procurementSection {
           padding: 100px 20px;
-          background: #0a1a2d;
+          background: #0b120e;
           color: white;
         }
 
@@ -787,7 +792,7 @@ export default function Home() {
         }
 
         .quoteBox > span {
-          color: #55b7ff;
+          color: #39ff14;
           font-size: 11px;
           font-weight: 850;
           letter-spacing: 0.11em;
@@ -817,7 +822,7 @@ export default function Home() {
         .quoteBox > a {
           margin-top: 15px;
           display: inline-block;
-          color: #55b7ff;
+          color: #39ff14;
           font-weight: 800;
           text-decoration: none;
         }
@@ -831,13 +836,13 @@ export default function Home() {
 
         .processCard {
           padding: 28px;
-          border-top: 3px solid #168bea;
+          border-top: 3px solid #20d968;
           background: white;
           box-shadow: 0 15px 38px rgba(20, 48, 82, 0.06);
         }
 
         .processCard > span {
-          color: #168bea;
+          color: #20d968;
           font-size: 12px;
           font-weight: 900;
         }
@@ -883,7 +888,7 @@ export default function Home() {
           justify-content: space-between;
           align-items: center;
           gap: 50px;
-          background: linear-gradient(135deg, #116fc4, #153e85);
+          background: linear-gradient(135deg, #0d5c36, #050807);
           color: white;
           box-shadow: 0 25px 70px rgba(20, 82, 156, 0.24);
         }
