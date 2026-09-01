@@ -3,44 +3,52 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function Contact() {
-  function handleSubmit(event) {
-    event.preventDefault();
+async function handleSubmit(event) {
+  event.preventDefault();
 
-    const form = new FormData(event.currentTarget);
+  const formElement = event.currentTarget;
+  const form = new FormData(formElement);
 
-    const name = form.get("name");
-    const company = form.get("company");
-    const email = form.get("email");
-    const phone = form.get("phone");
-    const requestType = form.get("requestType");
-    const quantity = form.get("quantity");
-    const deliveryLocation = form.get("deliveryLocation");
-    const timeline = form.get("timeline");
-    const message = form.get("message");
+  const payload = {
+    name: form.get("name"),
+    company: form.get("company"),
+    email: form.get("email"),
+    phone: form.get("phone"),
+    requestType: form.get("requestType"),
+    quantity: form.get("quantity"),
+    deliveryLocation: form.get("deliveryLocation"),
+    timeline: form.get("timeline"),
+    requirements: form.get("message"),
+  };
 
-    const subject = encodeURIComponent(
-      `SecureVolt Quote Request - ${company || name}`
+  try {
+    const response = await fetch("/api/quote-request", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Unable to submit quote request.");
+    }
+
+    alert(
+      "Your commercial quote request has been received. SecureVolt will review the requirements and follow up."
     );
 
-    const body = encodeURIComponent(
-`New SecureVolt commercial quote request
+    formElement.reset();
+  } catch (error) {
+    console.error("Quote submission error:", error);
 
-Name: ${name}
-Company: ${company}
-Email: ${email}
-Phone: ${phone || "Not provided"}
-Request type: ${requestType}
-Estimated quantity: ${quantity || "Not provided"}
-Delivery location: ${deliveryLocation || "Not provided"}
-Required timeline: ${timeline || "Not provided"}
-
-Project requirements:
-${message}`
+    alert(
+      "We could not submit your request. Please try again or email dispatch@securevoltsolutions.com."
     );
-
-    window.location.href =
-      `mailto:dispatch@securevoltsolutions.com?subject=${subject}&body=${body}`;
   }
+}
 
   return (
     <>
