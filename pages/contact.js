@@ -3,52 +3,52 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function Contact() {
-async function handleSubmit(event) {
-  event.preventDefault();
+  async function handleSubmit(event) {
+    event.preventDefault();
 
-  const formElement = event.currentTarget;
-  const form = new FormData(formElement);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
 
-  const payload = {
-    name: form.get("name"),
-    company: form.get("company"),
-    email: form.get("email"),
-    phone: form.get("phone"),
-    requestType: form.get("requestType"),
-    quantity: form.get("quantity"),
-    deliveryLocation: form.get("deliveryLocation"),
-    timeline: form.get("timeline"),
-    requirements: form.get("message"),
-  };
+    const payload = {
+      name: form.get("name"),
+      company: form.get("company"),
+      email: form.get("email"),
+      phone: form.get("phone"),
+      requestType: form.get("requestType"),
+      quantity: form.get("quantity"),
+      deliveryLocation: form.get("deliveryLocation"),
+      timeline: form.get("timeline"),
+      requirements: form.get("message"),
+    };
 
-  try {
-    const response = await fetch("/api/quote-request", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const response = await fetch("/api/quote-request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.error || "Unable to submit quote request.");
+      if (!response.ok) {
+        throw new Error(data.error || "Unable to submit quote request.");
+      }
+
+      alert(
+        "Your commercial quote request has been received. SecureVolt will review the requirements and follow up."
+      );
+
+      formElement.reset();
+    } catch (error) {
+      console.error("Quote submission error:", error);
+
+      alert(
+        "We could not submit your request. Please try again or email dispatch@securevoltsolutions.com."
+      );
     }
-
-    alert(
-      "Your commercial quote request has been received. SecureVolt will review the requirements and follow up."
-    );
-
-    formElement.reset();
-  } catch (error) {
-    console.error("Quote submission error:", error);
-
-    alert(
-      "We could not submit your request. Please try again or email dispatch@securevoltsolutions.com."
-    );
   }
-}
 
   return (
     <>
@@ -89,6 +89,7 @@ async function handleSubmit(event) {
               <Link href="/#solutions">Solutions</Link>
               <Link href="/#process">Process</Link>
               <Link href="/#about">About</Link>
+
               <Link className="navButton" href="/">
                 Back to Home
               </Link>
@@ -119,7 +120,9 @@ async function handleSubmit(event) {
             <form className="quoteForm" onSubmit={handleSubmit}>
               <div className="formHeading">
                 <span>Start Your Request</span>
+
                 <h2>Commercial technology quote</h2>
+
                 <p>
                   Provide as much information as possible. Missing details can
                   be confirmed during follow-up.
@@ -168,10 +171,15 @@ async function handleSubmit(event) {
 
                 <label>
                   Request type
-                  <select name="requestType" defaultValue="" required>
+                  <select
+                    name="requestType"
+                    defaultValue=""
+                    required
+                  >
                     <option value="" disabled>
                       Select a service
                     </option>
+
                     <option>Volume laptops and computers</option>
                     <option>Workstations, servers, or displays</option>
                     <option>Network and connectivity equipment</option>
@@ -219,11 +227,12 @@ async function handleSubmit(event) {
                 />
               </label>
 
-              <button type="submit">Prepare Email Request</button>
+              <button type="submit">
+                Submit Commercial Quote Request
+              </button>
 
               <p className="formNote">
-                Selecting the button opens your email application with the
-                quote details already prepared.
+                Your request will be sent securely to SecureVolt for review.
               </p>
             </form>
 
@@ -234,30 +243,37 @@ async function handleSubmit(event) {
 
               <div className="step">
                 <strong>01</strong>
+
                 <div>
                   <h3>Requirements review</h3>
+
                   <p>
-                    We review the requested equipment, quantity, configuration,
-                    support coverage, and delivery requirements.
+                    We review the requested equipment, quantity,
+                    configuration, support coverage, and delivery
+                    requirements.
                   </p>
                 </div>
               </div>
 
               <div className="step">
                 <strong>02</strong>
+
                 <div>
                   <h3>Commercial sourcing</h3>
+
                   <p>
-                    SecureVolt checks appropriate manufacturer and distribution
-                    channels for matched inventory.
+                    SecureVolt checks appropriate manufacturer and
+                    distribution channels for matched inventory.
                   </p>
                 </div>
               </div>
 
               <div className="step">
                 <strong>03</strong>
+
                 <div>
                   <h3>Complete quotation</h3>
+
                   <p>
                     You receive pricing, warranty details, estimated taxes,
                     delivery information, and applicable terms.
@@ -284,6 +300,7 @@ async function handleSubmit(event) {
         <footer>
           <div>
             <strong>SecureVolt Solutions Incorporated</strong>
+
             <span>
               Commercial Technology Procurement & Security Solutions
             </span>
@@ -306,8 +323,13 @@ async function handleSubmit(event) {
           background: #f4f7f5;
           color: #102018;
           font-family:
-            Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-            "Segoe UI", sans-serif;
+            Inter,
+            ui-sans-serif,
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            sans-serif;
         }
 
         :global(a) {
@@ -433,7 +455,9 @@ async function handleSubmit(event) {
           width: min(1180px, 100%);
           margin: 0 auto;
           display: grid;
-          grid-template-columns: minmax(0, 1.25fr) minmax(340px, 0.75fr);
+          grid-template-columns:
+            minmax(0, 1.25fr)
+            minmax(340px, 0.75fr);
           gap: 32px;
           align-items: start;
         }
