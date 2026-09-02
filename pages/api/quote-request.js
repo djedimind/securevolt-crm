@@ -181,7 +181,9 @@ Source: securevoltsolutions.com
   description,
 
   // SecureVolt custom deal properties.
-  procurement_volume: quantity || "",
+  request_type: requestType,
+  procurement_volume: quantity ? Number(quantity) : undefined,
+  delivery_location: deliveryLocation || "",
   required_timeline: timeline || "",
   project_requirements: requirements,
 },
