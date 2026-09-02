@@ -171,16 +171,20 @@ Source: securevoltsolutions.com
     method: "POST",
     body: JSON.stringify({
       properties: {
-        dealname: `${company} — ${requestType}`,
-        pipeline: "default",
+  dealname: `${company} — ${requestType}`,
+  pipeline: "default",
 
-        // This is the internal HubSpot stage ID that now displays
-        // as "New Opportunity" in the SecureVolt pipeline.
-        dealstage: "appointmentscheduled",
+  // Internal HubSpot stage ID displayed as "New Opportunity".
+  dealstage: "appointmentscheduled",
 
-        description,
-      },
+  // Full submission retained as a readable deal summary.
+  description,
 
+  // SecureVolt custom deal properties.
+  procurement_volume: quantity || "",
+  required_timeline: timeline || "",
+  project_requirements: requirements,
+},
       associations: [
         {
           to: {
