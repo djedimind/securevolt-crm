@@ -1,15 +1,17 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { useRef } from "react";
 
 export default function Contact() {
+    const formStartedAt = useRef(Date.now());
   async function handleSubmit(event) {
     event.preventDefault();
 
     const formElement = event.currentTarget;
     const form = new FormData(formElement);
 
-    const payload = {
+        const payload = {
       name: form.get("name"),
       company: form.get("company"),
       email: form.get("email"),
@@ -19,6 +21,10 @@ export default function Contact() {
       deliveryLocation: form.get("deliveryLocation"),
       timeline: form.get("timeline"),
       requirements: form.get("message"),
+
+      // Anti-bot signals
+      website: form.get("website") || "",
+      formStartedAt: formStartedAt.current,
     };
 
     try {
@@ -41,6 +47,7 @@ export default function Contact() {
       );
 
       formElement.reset();
+            formStartedAt.current = Date.now();
     } catch (error) {
       console.error("Quote submission error:", error);
 
@@ -118,6 +125,26 @@ export default function Contact() {
         <section className="contactSection">
           <div className="contactGrid">
             <form className="quoteForm" onSubmit={handleSubmit}>
+                              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  left: "-10000px",
+                  width: "1px",
+                  height: "1px",
+                  overflow: "hidden",
+                }}
+              >
+                <label>
+                  Website
+                  <input
+                    name="website"
+                    type="text"
+                    tabIndex="-1"
+                    autoComplete="off"
+                  />
+                </label>
+              </div>
               <div className="formHeading">
                 <span>Start Your Request</span>
 
