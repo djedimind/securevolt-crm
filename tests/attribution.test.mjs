@@ -22,6 +22,8 @@ const payload=buildInquiry(f,answers,Date.now()-5000,captureAttribution(url.sear
 assert.equal(payload.requestType,'Workstations, servers, or displays');
 for(const [key,value]of Object.entries(tags))assert.ok(payload.requirements.includes(`${key}: ${value}`));
 assert.match(payload.requirements,/Record classification: TEST/);
+assert.ok(!payload.requirements.includes('No request has been submitted.'));
+assert.match(payload.requirements,/Discovery selections attached to this inquiry/);
 assert.ok(!payload.requirements.includes('private@example.com'));
 assert.ok(!buildInquiry({...f,company:'Example Bar'},answers).requirements.includes('Record classification: TEST'));
 let posted;
