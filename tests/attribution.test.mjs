@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import {captureAttribution,readAttribution,cleanAttribution,campaignQuery} from '../lib/attribution.mjs';
+import {buildInquiry,submitInquiry} from '../lib/inquiry.mjs';
+import {encodeHandoff,decodeHandoff} from '../lib/handoff.mjs';
+const values=new Map(),storage={getItem:k=>values.get(k),setItem:(k,v)=>values.set(k,v)};
+const tags={utm_source:'linkedin',utm_medium:'organic_social',utm_campaign:'sv_display_bars_20261026',utm_content:'launch'};
+const search='?industry=bars&'+new URLSearchParams({...tags,email:'private@example.com'});
+assert.deepEqual(captureAttribution(search,storage,1000),tags);
+assert.deepEqual(captureAttribution('',storage,2000),tags); // Main-page navigation retains the campaign.
+const answers={industry:'bars',locations:'one',needs:['displays'],timing:'soon',support:'remote'};
+const link='/contact'+campaignQuery(readAttribution(storage,2000))+encodeHandoff(answers);
+const url=new URL(link,'https://securevoltsolutions.com');
+assert.deepEqual(decodeHandoff(url.hash),answers);
+const blocked={getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}};
+assert.deepEqual(captureAttribution(url.search,blocked,2000),tags); // Works without session storage too.
+assert.deepEqual(readAttribution(storage,1000+24*60*60*1000+1),{});
+assert.deepEqual(readAttribution(storage,0),{});
+assert.deepEqual(cleanAttribution({utm_source:'<script>',utm_medium:'a'.repeat(101),utm_campaign:'person@example.com',email:'private@example.com',utm_content:'launch'}),{utm_content:'launch'});
+assert.deepEqual(readAttribution({getItem:()=>'{broken'}),{});
+const f={name:'QA Reviewer',company:'TEST Attribution QA',email:'qa@example.com',industry:'bars',locations:'one',timing:'soon',support:'remote',offer:'equipment',message:'Attribution verification only.',consent:true};
+const payload=buildInquiry(f,answers,Date.now()-5000,captureAttribution(url.search,blocked));
+assert.equal(payload.requestType,'Workstations, servers, or displays');
+for(const [key,value]of Object.entries(tags))assert.ok(payload.requirements.includes(`${key}: ${value}`));
+assert.match(payload.requirements,/Record classification: TEST/);
+assert.ok(!payload.requirements.includes('private@example.com'));
+assert.ok(!buildInquiry({...f,company:'Example Bar'},answers).requirements.includes('Record classification: TEST'));
+let posted;
+const receipt=await submitInquiry(payload,{fetcher:async(endpoint,options)=>{posted=JSON.parse(options.body);return new Response(JSON.stringify({success:true,requestId:'test-attribution-receipt'}));}});
+assert.equal(receipt.requestId,'test-attribution-receipt');
+assert.ok(posted.requirements.includes(tags.utm_campaign));
+console.log('Passed campaign navigation, selector/inquiry handoff, blocked storage, expiry, unsafe tags, test classification and submission payload checks.');
