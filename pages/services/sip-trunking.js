@@ -1,25 +1,2 @@
-import Head from "next/head";
-import Link from "next/link";
-
-export default function SIPTrunking() {
-  return (
-    <>
-      <Head>
-        <title>SIP Trunking & Call Centers | SecureVolt</title>
-        <meta name="description" content="SecureVolt Solutions offers cost-effective SIP Trunking and call center solutions with high reliability and AI-powered routing." />
-      </Head>
-      <div className="container mx-auto px-4 py-10">
-        <h1 className="text-4xl font-bold text-blue-600">SIP Trunking & Call Centers</h1>
-        <p className="mt-4 text-lg">
-          Reliable SIP Trunking solutions with AI-driven call routing, cost-efficient pricing, and seamless business communication.
-        </p>
-        <ul className="mt-6 list-disc ml-6 text-lg">
-          <li>🔹 Cost-efficient Call Routing & IVR</li>
-          <li>🔹 High-Quality VoIP Connectivity</li>
-          <li>🔹 Scalable Call Center Solutions</li>
-        </ul>
-        <Link href="/contact" className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg">Get a Free Quote</Link>
-      </div>
-    </>
-  );
-}
+import SolutionDetail from '../../components/SolutionDetail';
+export default function Sip(){return <SolutionDetail title="SIP & Voice Connectivity Discovery" description="Start with your existing phone platform, service requirements and supplier compatibility." points={['Document the current phone platform and service provider.','Confirm number porting, concurrent calls and resilience needs.','Use supplier specialists to verify a suitable service design.','Confirm service terms, delivery responsibilities and ongoing support before ordering.']}/>;}
