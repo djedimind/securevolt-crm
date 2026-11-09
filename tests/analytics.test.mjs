@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {trackConfirmedLead} from '../lib/analytics.mjs';
+const calls=[];const storage=new Map();const browser={location:{hostname:'securevoltsolutions.com'},gtag:(...args)=>calls.push(args),sessionStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)}};
+const input={receipt:{requestId:'confirmed-test-receipt'},offer:'review'};
+assert.equal(trackConfirmedLead(input,browser),true);
+assert.deepEqual(calls,[['event','generate_lead',{send_to:'G-LHBQWZH3KS',lead_source:'website_inquiry',service_offer:'review'}]]);
+assert.equal(trackConfirmedLead(input,browser),false);
+assert.equal(trackConfirmedLead({...input,isTest:true},browser),false);
+assert.equal(trackConfirmedLead({...input,receipt:{requestId:'preview',preview:true}},browser),false);
+assert.equal(trackConfirmedLead({...input,receipt:{}},browser),false);
+assert.equal(trackConfirmedLead(input,{...browser,location:{hostname:'localhost'}}),false);
+const restricted={...browser,__svLeadReceipts:new Set(),sessionStorage:{getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}}};
+assert.equal(trackConfirmedLead({...input,receipt:{requestId:'storage-blocked'}},restricted),true);
+assert.equal(trackConfirmedLead({...input,receipt:{requestId:'storage-blocked'}},restricted),false);
+console.log('Lead analytics requires confirmed receipts, excludes test/preview and non-production hosts, deduplicates, and sends only fixed non-personal fields.');
