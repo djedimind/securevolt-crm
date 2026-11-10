@@ -1,3 +1,6 @@
 import ServicePage from '../components/ServicePage';
+import ProjectHighlight from '../components/ProjectHighlight';
 import content from '../lib/service-content.json';
-export default function Page(){return <ServicePage page={content["business-network-wifi"]} path="/business-network-wifi"/>;}
+export default function Page(){return <ServicePage page={content['business-network-wifi']} path="/business-network-wifi">
+<ProjectHighlight id="independence-project" location="INDEPENDENCE, OHIO" title="Office network installation: 15 cable runs" summary="Installed an office network for a home healthcare company's administrative office in Independence, Ohio. All 15 network cable runs were installed, terminated and tested." work={['Installed 15 network cable runs, including termination and testing.','Installed the network rack, switch and patch panel.','Installed wireless access points, phones, printers and fax equipment.']} photos={[{src:'/projects/independence-network-rack.webp',alt:'Wall-mounted rack and patch panel during the Independence office network installation',caption:'Installation progress: wall-mounted rack and patch panel.'},{src:'/projects/independence-cable-termination.webp',alt:'Network cable termination detail at the Independence office patch panel',caption:'Installation progress: patch-panel termination detail.'}]} note="These photos document stages of the installation, rather than a finished equipment-room overview. This project describes office networking work; it is not a healthcare compliance assessment."/>
+</ServicePage>;}
