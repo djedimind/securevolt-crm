@@ -1,10 +1,36 @@
 import assert from 'node:assert/strict';
 import handler from '../pages/api/quote-request.js';
-import {buildInquiry} from '../lib/inquiry.mjs';
+import {buildInquiry,buildQuickInquiry,validateQuickInquiry} from '../lib/inquiry.mjs';
 const payload=buildInquiry({name:'QA Reviewer',company:'TEST Pipeline Contract',email:'qa@example.test',industry:'bars',locations:'one',timing:'soon',support:'remote',offer:'training',message:'TEST ONLY — no network requests are permitted in this test.',consent:true},null,Date.now()-5000);
 const beforeFetch=global.fetch,beforeLog=console.log,beforeError=console.error;
 const keys=['HUBSPOT_SERVICE_KEY','RESEND_API_KEY','SUPABASE_URL','SUPABASE_SECRET_KEY'];const saved=Object.fromEntries(keys.map(k=>[k,process.env[k]]));
 for(const k of keys)process.env[k]=k==='SUPABASE_URL'?'https://test.invalid':'test-only-never-sent';
 async function run(body,mailFailure=false){const calls=[];global.fetch=async(url,options)=>{calls.push({url:String(url),body:JSON.parse(options.body)});if(String(url).includes('api.resend.com'))return new Response(JSON.stringify(mailFailure?{error:'Test mail failure'}:{id:'test-email'}),{status:mailFailure?500:200});if(String(url).endsWith('/search'))return new Response(JSON.stringify({results:[]}));if(String(url).includes('hubapi.com'))return new Response(JSON.stringify({id:'test-crm'}));if(String(url).includes('test.invalid'))return new Response(JSON.stringify({deal_id:'test-native'}));throw Error('Unexpected transport');};let status,result;await handler({method:'POST',body},{setHeader(){},status(n){status=n;return this;},json(value){result=value;return this;}});return {status,result,calls};}
-try{console.log=()=>{};console.error=()=>{};const ok=await run(payload);assert.equal(ok.status,200);assert.ok(ok.result.requestId);assert.equal(ok.calls.filter(c=>c.url.includes('resend.com')).length,1);assert.deepEqual(ok.calls.find(c=>c.url.includes('resend.com')).body.to,['dispatch@securevoltsolutions.com']);const deal=ok.calls.find(c=>c.url.endsWith('/crm/v3/objects/deals'));assert.match(deal.body.properties.description,/Staff Technology Confidence/);assert.equal(deal.body.properties.request_type,'Other commercial technology request');const failed=await run(payload,true);assert.equal(failed.status,500);assert.equal(failed.calls.length,1);const invalid=await run({...payload,email:'invalid'});assert.equal(invalid.status,400);assert.equal(invalid.calls.length,0);}finally{global.fetch=beforeFetch;console.log=beforeLog;console.error=beforeError;for(const k of keys){if(saved[k]===undefined)delete process.env[k];else process.env[k]=saved[k];}}
+try{console.log=()=>{};console.error=()=>{};const ok=await run(payload);assert.equal(ok.status,200);assert.ok(ok.result.requestId);assert.equal(ok.calls.filter(c=>c.url.includes('resend.com')).length,1);assert.deepEqual(ok.calls.find(c=>c.url.includes('resend.com')).body.to,['dispatch@securevoltsolutions.com']);const deal=ok.calls.find(c=>c.url.endsWith('/crm/v3/objects/deals'));assert.match(deal.body.properties.description,/Staff Technology Confidence/);assert.equal(deal.body.properties.request_type,'Other commercial technology request');const failed=await run(payload,true);assert.equal(failed.status,500);assert.equal(failed.calls.length,1);const invalid=await run({...payload,email:'invalid'});assert.equal(invalid.status,400);assert.equal(invalid.calls.length,0);
+const form = {
+  name: 'QA Reviewer',
+  company: 'TEST Quick Inquiry',
+  contact: '(216) 555-0123',
+  message: 'The POS loses connectivity at dinner.',
+};
+const phoneOnly = buildQuickInquiry(form, Date.now() - 5000);
+const phoneResult = await run(phoneOnly);
+assert.equal(phoneResult.status, 200);
+const phoneMail = phoneResult.calls.find(call => call.url.includes('resend.com'));
+assert.equal(phoneMail.body.reply_to, undefined);
+assert.match(phoneMail.body.text, /Phone: \(216\) 555-0123/);
+const phoneContact = phoneResult.calls.find(call => call.url.endsWith('/objects/contacts'));
+assert.equal(phoneContact.body.properties.phone, form.contact);
+assert.equal(phoneContact.body.properties.email, undefined);
+assert.equal(phoneResult.calls.some(call => call.url.includes('test.invalid')), false);
+
+const emailOnly = buildQuickInquiry({...form, contact:'qa@example.test'}, Date.now() - 5000);
+const emailResult = await run(emailOnly);
+assert.equal(emailResult.status, 200);
+assert.equal(emailResult.calls.find(call => call.url.includes('resend.com')).body.reply_to, emailOnly.email);
+assert.equal(emailResult.calls.some(call => call.url.includes('test.invalid')), true);
+assert.ok(validateQuickInquiry({...form, contact:'call me', message:' '}).contact);
+assert.ok(validateQuickInquiry({...form, message:' '}).message);
+assert.equal((await run({...phoneOnly, inquiryFormat:undefined})).status, 400);
+}finally{global.fetch=beforeFetch;console.log=beforeLog;console.error=beforeError;for(const k of keys){if(saved[k]===undefined)delete process.env[k];else process.env[k]=saved[k];}}
 console.log('Passed existing production API contract with mocked email/HubSpot/CRM transports; no live requests were sent.');

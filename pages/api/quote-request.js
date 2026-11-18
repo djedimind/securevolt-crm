@@ -251,6 +251,8 @@ function normalizeSubmission(body = {}) {
         : String(numericQuantity),
 
     numericQuantity,
+    allowPhoneOnly: body.inquiryFormat === "quick" &&
+      body.requestType === "Technology risk assessment",
 
     deliveryLocation: cleanText(
       body.deliveryLocation,
@@ -303,8 +305,8 @@ function validateSubmission(data) {
     errors.push("Company is required.");
   }
 
-  if (isBlank(data.email)) {
-    errors.push("Email is required.");
+  if (isBlank(data.email) && !(data.allowPhoneOnly && data.phone)) {
+    errors.push(data.allowPhoneOnly ? "Email or phone is required." : "Email is required.");
   }
 
   if (isBlank(data.requestType)) {
@@ -625,7 +627,7 @@ async function createOrUpdateContact({
   phone,
 }) {
   const existingContact =
-    await findContactByEmail(email);
+    email ? await findContactByEmail(email) : null;
 
   const {
     firstname,
@@ -633,7 +635,7 @@ async function createOrUpdateContact({
   } = splitName(name);
 
   const properties = {
-    email,
+    ...(email ? { email } : {}),
     firstname,
     lastname,
   };
@@ -728,7 +730,7 @@ ${requestId}
 CONTACT
 Name: ${name}
 Company: ${company}
-Email: ${email}
+Email: ${email || "Not provided"}
 Phone: ${phone || "Not provided"}
 
 REQUEST
@@ -1022,8 +1024,7 @@ async function sendQuoteEmail({
           "dispatch@securevoltsolutions.com",
         ],
 
-        reply_to:
-          email,
+        ...(email ? { reply_to: email } : {}),
 
         subject:
           `New Commercial Quote Request — ${company}`,
@@ -1037,7 +1038,7 @@ ${requestId}
 CONTACT
 Name: ${name}
 Company: ${company}
-Email: ${email}
+Email: ${email || "Not provided"}
 Phone: ${phone || "Not provided"}
 
 REQUEST
@@ -1293,7 +1294,7 @@ export default async function handler(
           requirements,
         }),
 
-        ingestIntoSecureVoltCRM({
+        email ? ingestIntoSecureVoltCRM({
           requestId,
           name,
           company,
@@ -1304,7 +1305,7 @@ export default async function handler(
           deliveryLocation,
           timeline,
           requirements,
-        }),
+        }) : null,
       ]);
 
     /* -----------------------------------------------------
@@ -1346,7 +1347,10 @@ export default async function handler(
        Native SecureVolt CRM result
     ----------------------------------------------------- */
 
-    if (
+    if (!email) {
+      // The native CRM ingestion function requires email to identify contacts.
+      console.log("Phone-only quote routed to dispatch and HubSpot:", { requestId });
+    } else if (
       secureVoltCRMResult.status ===
       "fulfilled"
     ) {
